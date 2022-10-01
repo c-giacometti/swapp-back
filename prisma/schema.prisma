@@ -12,6 +12,21 @@ model User {
   username String @unique
   email String @unique
   password String
+  Product Product[]
 
   @@map("users")
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  productName String @db.VarChar(50)
+  description String @db.VarChar(300)
+  minPrice Float
+  maxPrice Float
+  imgUrl String
+  createdAt DateTime @default(now())
+  userId Int
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("products")
 }
