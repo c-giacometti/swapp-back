@@ -13,7 +13,8 @@ model User {
   email String @unique
   password String
   Product Product[]
-  ProductLike ProductLike[]
+  Likes Likes[]
+  IsLiked IsLiked[]
 
   @@map("users")
 }
@@ -28,30 +29,43 @@ model Product {
   createdAt DateTime @default(now())
   userId Int
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Like Like[]
-  ProductLike ProductLike[]
+  Like Likes[]
+  IsLiked IsLiked[]
 
   @@map("products")
 }
 
-model Like {
+model Likes {
   id Int @id @default(autoincrement())
-  likedProductId Int
+  likingUserId Int
+  likingProductId Int
   createdAt DateTime @default(now())
-  Product Product @relation(fields: [likedProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  ProductLike ProductLike[]
+  LikingUserId User @relation(fields: [likingUserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  LikingProductId Product @relation(fields: [likingProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  LikesIsLiked LikesIsLiked[]
 
   @@map("likes")
 }
 
-model ProductLike {
+model IsLiked {
   id Int @id @default(autoincrement())
-  likeId Int
-  likingProductId Int
-  likingUserId Int
-  userLike User @relation(fields: [likingUserId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  Like Like @relation(fields: [likeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  likingProduct Product @relation(fields: [likingProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  likedProductId Int
+  likedUserId Int
+  createdAt DateTime @default(now())
+  LikedUserId User @relation(fields: [likedUserId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  LikedProductId Product @relation(fields: [likedProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  LikesIsLiked LikesIsLiked[]
+  
+  @@map("isLiked")
+}
 
-  @@map("productLike")
+model LikesIsLiked {
+  id Int @id @default(autoincrement())
+  likesId Int
+  isLikedId Int
+  isMatch Boolean @default(false)
+  LikesId Likes @relation(fields: [likesId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  IsLikedId IsLiked @relation(fields: [isLikedId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("likesIsLiked")
 }
