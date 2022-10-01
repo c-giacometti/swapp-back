@@ -13,6 +13,7 @@ model User {
   email String @unique
   password String
   Product Product[]
+  ProductLike ProductLike[]
 
   @@map("users")
 }
@@ -27,6 +28,30 @@ model Product {
   createdAt DateTime @default(now())
   userId Int
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Like Like[]
+  ProductLike ProductLike[]
 
   @@map("products")
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+  likedProductId Int
+  createdAt DateTime @default(now())
+  Product Product @relation(fields: [likedProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ProductLike ProductLike[]
+
+  @@map("likes")
+}
+
+model ProductLike {
+  id Int @id @default(autoincrement())
+  likeId Int
+  likingProductId Int
+  likingUserId Int
+  userLike User @relation(fields: [likingUserId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Like Like @relation(fields: [likeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  likingProduct Product @relation(fields: [likingProductId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("productLike")
 }
