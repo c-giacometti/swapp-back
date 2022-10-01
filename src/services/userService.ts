@@ -32,3 +32,12 @@ export async function loginUser(
     return { token };
 
 }
+
+export async function registerNewUser(
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+) {
+    
+}

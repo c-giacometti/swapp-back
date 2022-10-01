@@ -10,3 +10,13 @@ export async function login(req: Request, res: Response) {
     return res.status(200).send({ token });
 
 }
+
+export async function register(req: Request, res: Response){
+
+    const { username, email, password, confirmPassword} = req.body;
+
+    await userService.registerNewUser(username, email, password, confirmPassword);
+
+    return res.status(201).send("user registered successfully");
+    
+}

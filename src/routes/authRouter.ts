@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { login }from "../controllers/authController";
-import schemas from "../schemas/schemas";
+import validateSchema from "../middlewares/validateSchemaMiddleware";
 
 const router = Router();
 
-router.post("/signin", login);
+router.post("/signin", validateSchema("userSchema") ,login);
 
 export default router;
