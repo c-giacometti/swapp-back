@@ -1,7 +1,8 @@
-;;import { userSchema } from "./auth";
+;;import { userSchema, newUserSChema } from "./auth";
 
 const schemas = {
-    userSchema
+    userSchema,
+    newUserSChema
 }
 
 export default schemas;

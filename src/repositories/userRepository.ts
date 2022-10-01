@@ -16,6 +16,16 @@ export async function findUserByEmail(email: string){
 
 }
 
+export async function findUserByUsername(username: string){
+
+    const result = await connection.user.findUnique({
+        where: { username }
+    });
+
+    return result;
+
+}
+
 export async function insertNewUser(userData: TUserData){
 
     const { username, email, password } = userData;
@@ -23,5 +33,5 @@ export async function insertNewUser(userData: TUserData){
     await connection.user.create({
         data: { username, email, password } 
     });
-    
+
 }
