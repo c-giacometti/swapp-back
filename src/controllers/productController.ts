@@ -30,3 +30,21 @@ export async function listProducts(req: Request, res: Response){
     return res.status(200).send(userProducts);
 
 }
+
+export async function deleteProduct(req: Request, res: Response){
+    
+    const { productId } = req.params;
+    const { userId } = res.locals;
+
+    if(isNaN(parseInt(productId))){
+        throw {
+            type: "error_bad_request",
+            message: "invalid id"
+        }
+    }
+
+    await productService.deleteProduct(userId, parseInt(productId));
+
+    res.status(200).send("product deleted successfully");
+
+}

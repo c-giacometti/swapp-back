@@ -37,3 +37,23 @@ export async function findProductByUserId(userId: number){
 
     return result;
 }
+
+export async function deleteProduct(id: number){
+
+    await connection.product.delete({
+        where: { id }
+    });
+
+    return;
+
+}
+
+export async function findProductById(id: number){
+
+    const result = await connection.product.findUnique({
+        where: { id }
+    });
+
+    return result;
+    
+}

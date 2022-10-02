@@ -33,7 +33,9 @@ export async function registerProduct(
 
 }
 
-export async function getUserProducts(userId: number){
+export async function getUserProducts(
+    userId: number
+){
 
     //check if user exists
     await findUser(userId);
@@ -42,5 +44,47 @@ export async function getUserProducts(userId: number){
     const userProducts = await productRepository.findProductByUserId(userId);
 
     return userProducts;
+
+}
+
+export async function findProduct(
+    productId: number
+){
+    //check if product exists
+    const product = await productRepository.findProductById(productId);
+
+    if(!product){
+        throw {
+            type: "error_not_found",
+            message: "product not found"
+        }
+    }
+
+    //return product
+    return product;
+
+}
+
+export async function deleteProduct(
+    userId: number,
+    productId: number
+){
+    
+    //check if user exists
+    await findUser(userId);
+
+    //check if product exists
+    const product = await findProduct(productId);
+
+    //check if product belongs to user
+    if(product.userId !== userId){
+        throw {
+            type: "error_forbidden",
+            message: "access denied"
+        }
+    }
+
+    //delete product
+    await productRepository.deleteProduct(productId);
 
 }
