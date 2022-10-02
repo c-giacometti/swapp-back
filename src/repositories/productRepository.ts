@@ -28,3 +28,12 @@ export async function findProductByUserIdAndProductName(userId: number, productN
     return result;
 
 }
+
+export async function findProductByUserId(userId: number){
+
+    const result = await connection.product.findMany({
+        where: { userId }
+    });
+
+    return result;
+}
