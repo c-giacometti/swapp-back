@@ -1,4 +1,4 @@
-;;import { userSchema, newUserSChema } from "./auth";
+import { userSchema, newUserSChema } from "./auth";
 
 const schemas = {
     userSchema,

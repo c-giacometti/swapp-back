@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as userRepository from "../repositories/userRepository";
-import { decryptPasswords } from "../utils/encryptUtil";
+import { decryptPasswords, encryptPasswords } from "../utils/encryptUtil";
 
 export async function loginUser(
     email: string,
@@ -17,7 +17,7 @@ export async function loginUser(
     }
 
     //check password
-    const validPassword = decryptPasswords(password, user.password);
+    const validPassword = await decryptPasswords(password, user.password);
 
     if(!validPassword){
         throw {
@@ -39,5 +39,43 @@ export async function registerNewUser(
     password: string,
     confirmPassword: string
 ) {
+
+    //check if password and confirmation match
+    if(password !== confirmPassword){
+        throw {
+            type: "error_unprocessable_entity",
+            message: "incorrect data"
+        }
+    }
+
+    //check if username is already registered
+    const usernameInUse = await userRepository.findUserByUsername(username);
+
+    if(usernameInUse){
+        throw{
+            type: "error_conflict",
+            message: "username already in use"
+        }
+    }
+
+    //check if email is already registered
+    const registeredEmail = await userRepository.findUserByEmail(email);
+
+    if(registeredEmail){
+        throw{
+            type: "error_conflict",
+            message: "you already have an account"
+        }
+    }
+
+    //encrypt password
+    const hashedPassword = await encryptPasswords(password);
+
+    //insert into db
+    await userRepository.insertNewUser({
+        username, 
+        email, 
+        password: hashedPassword
+    });
     
 }
