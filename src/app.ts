@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import "express-async-errors";
 
 import authRouter from "./routes/authRouter";
+import productRouter from "./routes/productRouter";
 import errorHandler from "./middlewares/errorHandlerMiddleware";
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(authRouter);
+app.use(productRouter);
 app.use(errorHandler);
 
 export default app;
