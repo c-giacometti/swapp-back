@@ -32,6 +32,7 @@ model Product {
   Like Likes[]
   IsLiked IsLiked[]
 
+  @@unique([productName, userId])
   @@map("products")
 }
 

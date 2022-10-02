@@ -1,8 +1,10 @@
 import { userSchema, newUserSChema } from "./auth";
+import { productSchema } from "./product";
 
 const schemas = {
     userSchema,
-    newUserSChema
+    newUserSChema,
+    productSchema
 }
 
 export default schemas;
