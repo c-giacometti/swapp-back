@@ -6,6 +6,16 @@ export type TUserData = {
     password: string
 }
 
+export async function findUserById(id: number){
+
+    const result = await connection.user.findUnique({
+        where: { id }
+    });
+
+    return result;
+
+}
+
 export async function findUserByEmail(email: string){
 
     const result = await connection.user.findUnique({

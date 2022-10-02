@@ -18,3 +18,13 @@ export async function insertNewProduct(productData: TProduct){
     return result;
 
 }
+
+export async function findProductByProductName(userId: number, productName: string){
+
+    const result = await connection.product.findMany({
+        where: { userId, productName}
+    });
+
+    return result;
+
+}
