@@ -65,6 +65,30 @@ export async function findProduct(
 
 }
 
+export async function updateProduct(
+    productId: number,
+    productData: productRepository.TProduct
+) {
+    const { userId, productName, description, minPrice, maxPrice, imgUrl } = productData;
+    //check if user exists
+    await findUser(userId);
+
+    //check if product exists
+    const product = await findProduct(productId);
+
+    //check if product belongs to user
+    if(product.userId !== userId){
+        throw {
+            type: "error_forbidden",
+            message: "access denied"
+        }
+    }
+
+    //update product info
+    await productRepository.updateProduct(productId, productName, description, minPrice, maxPrice, imgUrl);
+
+}
+
 export async function deleteProduct(
     userId: number,
     productId: number

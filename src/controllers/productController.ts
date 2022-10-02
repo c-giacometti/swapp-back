@@ -1,6 +1,19 @@
 import { Request, Response } from "express";
 import * as productService from "../services/productService";
 
+function validateId(id: string){
+
+    if(isNaN(parseInt(id))){
+        throw {
+            type: "error_bad_request",
+            message: "Invalid id"
+        }
+    }
+
+    return;
+
+}
+
 export async function newProduct(req: Request, res: Response){
 
     const { productName, description, minPrice, maxPrice, imgUrl } = req.body;
@@ -35,12 +48,7 @@ export async function showProduct(req: Request, res: Response) {
 
     const { id } = req.params;
 
-    if(isNaN(parseInt(id))){
-        throw {
-            type: "error_bad_request",
-            message: "Invalid id"
-        }
-    }
+    validateId(id);
 
     const product = await productService.findProduct(parseInt(id));
 
@@ -48,17 +56,35 @@ export async function showProduct(req: Request, res: Response) {
     
 }
 
+export async function updateProductInfo(req: Request, res: Response){
+
+    const { userId } = res.locals;
+    const { productName, description, minPrice, maxPrice, imgUrl } = req.body; 
+    const { id } = req.params;
+
+    const productData = {
+        productName,
+        description,
+        minPrice,
+        maxPrice,
+        imgUrl,
+        userId
+    }
+
+    validateId(id);
+
+    await productService.updateProduct(parseInt(id), productData);
+
+    return res.status(200).send("product updated successfully");
+
+}
+
 export async function deleteProduct(req: Request, res: Response){
     
     const { id } = req.params;
     const { userId } = res.locals;
 
-    if(isNaN(parseInt(id))){
-        throw {
-            type: "error_bad_request",
-            message: "invalid id"
-        }
-    }
+    validateId(id);
 
     await productService.deleteProduct(userId, parseInt(id));
 

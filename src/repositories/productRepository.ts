@@ -48,6 +48,30 @@ export async function deleteProduct(id: number){
 
 }
 
+export async function updateProduct(
+    id: number, 
+    productName: string, 
+    description: string, 
+    minPrice: number, 
+    maxPrice: number,
+    imgUrl: string
+){
+
+    await connection.product.update({
+        where: { id },
+        data: {
+            productName,
+            description,
+            minPrice, 
+            maxPrice,
+            imgUrl
+        }
+    });
+
+    return;
+
+}
+
 export async function findProductById(id: number){
 
     const result = await connection.product.findUnique({
@@ -55,5 +79,5 @@ export async function findProductById(id: number){
     });
 
     return result;
-    
+
 }
