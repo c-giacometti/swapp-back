@@ -5,7 +5,8 @@ export async function registerProduct(
     productData: productRepository.TProduct
 ){
 
-    const { productName, description, minPrice, maxPrice, imgUrl, userId } = productData;
+    const { productName, minPrice, maxPrice, userId } = productData;
+
     //check if user exists
     const user = await findUser(userId);
 
@@ -19,10 +20,18 @@ export async function registerProduct(
     //check if user already registered product
     const alreadyRegistered = await productRepository.findProductByUserIdAndProductName(userId, productName);
 
-    if(alreadyRegistered){
+    if(alreadyRegistered.length > 0){
         throw {
             type: "error_conflict",
             message: "you already registered this product"
+        }
+    }
+
+    //check if minPrice < maxPrice
+    if(minPrice > maxPrice){
+        throw {
+            type: "error_bad_request",
+            message: "min price should be equal to or lower than max price"
         }
     }
 
