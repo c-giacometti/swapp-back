@@ -48,16 +48,6 @@ export async function registerNewUser(
         }
     }
 
-    //check if username is already registered
-    const usernameInUse = await userRepository.findUserByUsername(username);
-
-    if(usernameInUse){
-        throw{
-            type: "error_conflict",
-            message: "username already in use"
-        }
-    }
-
     //check if email is already registered
     const registeredEmail = await userRepository.findUserByEmail(email);
 
@@ -65,6 +55,16 @@ export async function registerNewUser(
         throw{
             type: "error_conflict",
             message: "you already have an account"
+        }
+    }
+
+    //check if username is already registered
+    const usernameInUse = await userRepository.findUserByUsername(username);
+
+    if(usernameInUse){
+        throw{
+            type: "error_conflict",
+            message: "username already in use"
         }
     }
 
