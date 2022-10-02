@@ -19,7 +19,7 @@ export async function insertNewProduct(productData: TProduct){
 
 }
 
-export async function findProductByProductName(userId: number, productName: string){
+export async function findProductByUserIdAndProductName(userId: number, productName: string){
 
     const result = await connection.product.findMany({
         where: { userId, productName}

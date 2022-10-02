@@ -7,7 +7,14 @@ export async function registerProduct(
 
     const { productName, description, minPrice, maxPrice, imgUrl, userId } = productData;
     //check if user exists
-    findUser(userId);
+    const user = await findUser(userId);
+
+    if(!user){
+        throw {
+            type: "error_not_found",
+            message: "user not found"
+        }
+    }
 
     //check if user already registered product
     const alreadyRegistered = await productRepository.findProductByUserIdAndProductName(userId, productName);
@@ -21,5 +28,5 @@ export async function registerProduct(
 
     //register product
     await productRepository.insertNewProduct(productData);
-    
+
 }

@@ -84,13 +84,6 @@ export async function findUser(userId: number){
 
     const user = await userRepository.findUserById(userId);
 
-    if(!user){
-        throw {
-            type: "error_not_found",
-            message: "user not found"
-        }
-    }
-
     return user;
 
 }
