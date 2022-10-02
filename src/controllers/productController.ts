@@ -31,19 +31,36 @@ export async function listProducts(req: Request, res: Response){
 
 }
 
+export async function showProduct(req: Request, res: Response) {
+
+    const { id } = req.params;
+
+    if(isNaN(parseInt(id))){
+        throw {
+            type: "error_bad_request",
+            message: "Invalid id"
+        }
+    }
+
+    const product = await productService.findProduct(parseInt(id));
+
+    return res.status(200).send(product);
+    
+}
+
 export async function deleteProduct(req: Request, res: Response){
     
-    const { productId } = req.params;
+    const { id } = req.params;
     const { userId } = res.locals;
 
-    if(isNaN(parseInt(productId))){
+    if(isNaN(parseInt(id))){
         throw {
             type: "error_bad_request",
             message: "invalid id"
         }
     }
 
-    await productService.deleteProduct(userId, parseInt(productId));
+    await productService.deleteProduct(userId, parseInt(id));
 
     res.status(200).send("product deleted successfully");
 
