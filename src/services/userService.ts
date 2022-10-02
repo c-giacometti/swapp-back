@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import * as userRepository from "../repositories/userRepository";
 import { decryptPasswords, encryptPasswords } from "../utils/encryptUtil";
 
@@ -27,7 +27,7 @@ export async function loginUser(
     }
 
     //generate token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '60min' });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
 
     return { token };
 

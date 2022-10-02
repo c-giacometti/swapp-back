@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
-import schemas from '../schemas/schemas';
+import { NextFunction, Request, Response } from "express";
+import schemas from "../schemas/schemas";
 
 type SchemasTypes = keyof typeof schemas;
 
