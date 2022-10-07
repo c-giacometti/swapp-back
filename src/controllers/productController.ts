@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as productService from "../services/productService";
 
-function validateId(id: string){
+export function validateId(id: string){
 
     if(isNaN(parseInt(id))){
         throw {

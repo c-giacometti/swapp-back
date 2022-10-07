@@ -41,4 +41,26 @@ export async function createLikeIsLiked(likesId: number, isLikedId: number){
 
 }
 
+export async function checkIfAlreadyLiked(likesId: number, isLikedId: number){
 
+    const result = await connection.likesIsLiked.findFirst({
+        where: {
+            likesId,
+            isLikedId
+        }
+    });
+
+    return result;
+
+}
+
+export async function updateLikeIsLiked(id: number){
+
+    await connection.likesIsLiked.update({
+        where: { id },
+        data: { isMatch: true }
+    });
+
+    return;
+
+}

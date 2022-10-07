@@ -1,6 +1,7 @@
 import * as likeRepository from "../repositories/likeRepository";
 import * as userService from "../services/userService";
 import * as productService from "../services/productService";
+import { checkIfItsAMatch } from "../repositories/matchRepository";
 
 export async function likeProduct(
     userId: number,
@@ -18,15 +19,56 @@ export async function likeProduct(
     //check if traded product belongs to trading user
     productService.checkUserProduct(likingProduct.userId, userId);
 
+    //check if already liked
+    const alreadyLiked = await likeRepository.checkIfAlreadyLiked(likingProductId, likedProductId);
+
+    if(alreadyLiked){
+        return;
+    }
+
     //check if like is a match
+    const itsAMatch = await checkIfItsAMatch(likedProductId, likingProductId);
+
+    if(itsAMatch){
+
+        updateMatch(itsAMatch.id);
+
+    } else {
+
+        insertLikes(likingProduct.userId, likingProductId, likedProduct.userId, likedProductId);
+        
+    }
+
+    return;
+
+}
+
+export async function insertLikes(
+    likingProductUserId: number, 
+    likingProductId: number, 
+    likedProductUserId: number,
+    likedProductId: number
+) {
 
     //insert like
-    const likes = await likeRepository.createLike(likingProduct.userId, likingProductId);
+    const likes = await likeRepository.createLike(likingProductUserId, likingProductId);
 
     //insert is liked
-    const isLiked = await likeRepository.createIsLiked(likedProduct.userId, likedProductId);
+    const isLiked = await likeRepository.createIsLiked(likedProductUserId, likedProductId);
 
     //insert likeIsLiked
     await likeRepository.createLikeIsLiked(likes.id, isLiked.id);
+
+    return;
+
+}
+
+export async function updateMatch(
+    likeIsLikedId: number
+){
+
+    await likeRepository.updateLikeIsLiked(likeIsLikedId);
+
+    return;
 
 }
