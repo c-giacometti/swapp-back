@@ -81,3 +81,11 @@ export async function findProductById(id: number){
     return result;
 
 }
+
+export async function filterProductsByPrice(userId: number, minPrice: number, maxPrice: number){
+
+    const result = await connection.$queryRaw`SELECT * FROM products WHERE products."minPrice" >= ${minPrice} AND products."maxPrice" <= ${maxPrice} AND not products."userId" = ${userId}`;
+
+    return result;
+
+}

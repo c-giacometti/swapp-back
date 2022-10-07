@@ -19,6 +19,9 @@ export async function newProduct(req: Request, res: Response){
     const { productName, description, minPrice, maxPrice, imgUrl } = req.body;
     const { userId } = res.locals;
 
+    parseFloat(minPrice);
+    parseFloat(maxPrice);
+
     const productData = {
         productName,
         description,
@@ -88,6 +91,19 @@ export async function deleteProduct(req: Request, res: Response){
 
     await productService.deleteProduct(userId, parseInt(id));
 
-    res.status(200).send("product deleted successfully");
+    return res.status(200).send("product deleted successfully");
+
+}
+
+export async function showProductsToTrade(req: Request, res: Response){
+
+    const { id } = req.params;
+    const { userId } = res.locals;
+
+    validateId(id);
+
+    const productsToTrade = await productService.filterProducts(userId, parseInt(id));
+
+    return res.status(200).send(productsToTrade);
 
 }

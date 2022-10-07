@@ -112,3 +112,29 @@ export async function deleteProduct(
     await productRepository.deleteProduct(productId);
 
 }
+
+export async function filterProducts(
+    userId: number,
+    productId: number
+) {
+
+     //check if user exists
+     await findUser(userId);
+
+     //check if product exists
+     const product = await findProduct(productId);
+
+    //check if product belongs to user
+    if(product.userId !== userId){
+        throw {
+            type: "error_forbidden",
+            message: "access denied"
+        }
+    }
+
+     //filter products to be traded
+     const products = await productRepository.filterProductsByPrice(userId, product.minPrice, product.maxPrice);
+
+     return products;
+    
+}
