@@ -77,12 +77,7 @@ export async function updateProduct(
     const product = await findProduct(productId);
 
     //check if product belongs to user
-    if(product.userId !== userId){
-        throw {
-            type: "error_forbidden",
-            message: "access denied"
-        }
-    }
+    checkUserProduct(product.userId, userId);
 
     //update product info
     await productRepository.updateProduct(productId, productName, description, minPrice, maxPrice, imgUrl);
@@ -101,12 +96,7 @@ export async function deleteProduct(
     const product = await findProduct(productId);
 
     //check if product belongs to user
-    if(product.userId !== userId){
-        throw {
-            type: "error_forbidden",
-            message: "access denied"
-        }
-    }
+    checkUserProduct(product.userId, userId);
 
     //delete product
     await productRepository.deleteProduct(productId);
@@ -124,17 +114,26 @@ export async function filterProducts(
      //check if product exists
      const product = await findProduct(productId);
 
-    //check if product belongs to user
-    if(product.userId !== userId){
-        throw {
-            type: "error_forbidden",
-            message: "access denied"
-        }
-    }
+     //check if product belongs to user
+     checkUserProduct(product.userId, userId);
 
      //filter products to be traded
      const products = await productRepository.filterProductsByPrice(userId, product.minPrice, product.maxPrice);
 
      return products;
     
+}
+
+export function checkUserProduct(
+    productUserId: number, userId: number
+){
+    if(productUserId !== userId){
+        throw {
+            type: "error_forbidden",
+            message: "access denied"
+        }
+    }
+
+    return;
+
 }
