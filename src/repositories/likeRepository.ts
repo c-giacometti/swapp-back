@@ -1,4 +1,5 @@
 import connection from "../config/prisma";
+import { TMatch } from "./matchRepository";
 
 export type TLike = {
     likingUserId: number,
@@ -43,12 +44,16 @@ export async function createLikeIsLiked(likesId: number, isLikedId: number){
 
 export async function checkIfAlreadyLiked(likesId: number, isLikedId: number){
 
-    const result = await connection.likesIsLiked.findFirst({
-        where: {
-            likesId,
-            isLikedId
-        }
-    });
+    const result = await connection.$queryRaw<TMatch>`
+        SELECT "likesIsLiked".id, "likingProductId", "likedProductId" 
+        FROM "likesIsLiked" 
+        JOIN likes 
+        ON likes.id="likesIsLiked"."likesId" 
+        JOIN "isLiked" 
+        ON "isLiked".id="likesIsLiked"."isLikedId"
+        WHERE "likingProductId"=${likesId}
+        AND "likedProductId"=${isLikedId}
+    `
 
     return result;
 

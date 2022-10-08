@@ -1,7 +1,7 @@
 import * as likeRepository from "../repositories/likeRepository";
 import * as userService from "../services/userService";
 import * as productService from "../services/productService";
-import { checkIfItsAMatch } from "../repositories/matchRepository";
+import { checkIfItsAMatch, TMatch } from "../repositories/matchRepository";
 
 export async function likeProduct(
     userId: number,
@@ -22,16 +22,19 @@ export async function likeProduct(
     //check if already liked
     const alreadyLiked = await likeRepository.checkIfAlreadyLiked(likingProductId, likedProductId);
 
-    if(alreadyLiked){
-        return;
+    if(alreadyLiked.length > 0){
+        throw {
+            type: "error_bad_request",
+            message: alreadyLiked
+        }
     }
 
     //check if like is a match
-    const itsAMatch = await checkIfItsAMatch(likedProductId, likingProductId);
+    const itsAMatch = await checkIfItsAMatch(likingProductId, likedProductId);
 
-    if(itsAMatch){
+    if(itsAMatch.length > 0){
 
-        updateMatch(itsAMatch.id);
+        updateMatch(itsAMatch[0].id);
 
     } else {
 
