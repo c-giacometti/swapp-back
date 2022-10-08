@@ -10,8 +10,8 @@ export async function likeProduct(req: Request, res: Response){
 
     validateId(id);
 
-    await likeService.likeProduct(userId, parseInt(id), likedProductId);
+    const isMatch = await likeService.likeProduct(userId, parseInt(id), likedProductId);
 
-    return res.status(201).send("like registered successfully");
+    return res.status(200).send(isMatch);
 
 }

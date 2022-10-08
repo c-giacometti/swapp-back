@@ -1,13 +1,15 @@
 import * as likeRepository from "../repositories/likeRepository";
 import * as userService from "../services/userService";
 import * as productService from "../services/productService";
-import { checkIfItsAMatch, TMatch } from "../repositories/matchRepository";
+import { checkIfItsAMatch } from "../repositories/matchRepository";
 
 export async function likeProduct(
     userId: number,
     likingProductId: number,
     likedProductId: number
 ) {
+
+    let match: boolean = false;
 
     //check if user exists
     await userService.findUser(userId);
@@ -23,10 +25,7 @@ export async function likeProduct(
     const alreadyLiked = await likeRepository.checkIfAlreadyLiked(likingProductId, likedProductId);
 
     if(alreadyLiked.length > 0){
-        throw {
-            type: "error_bad_request",
-            message: alreadyLiked
-        }
+        return;
     }
 
     //check if like is a match
@@ -35,14 +34,13 @@ export async function likeProduct(
     if(itsAMatch.length > 0){
 
         updateMatch(itsAMatch[0].id);
+        match = true;
 
-    } else {
+    } 
 
-        insertLikes(likingProduct.userId, likingProductId, likedProduct.userId, likedProductId);
-        
-    }
+    insertLikes(likingProduct.userId, likingProductId, likedProduct.userId, likedProductId, match);
 
-    return;
+    return match;
 
 }
 
@@ -50,7 +48,8 @@ export async function insertLikes(
     likingProductUserId: number, 
     likingProductId: number, 
     likedProductUserId: number,
-    likedProductId: number
+    likedProductId: number,
+    isMatch: boolean
 ) {
 
     //insert like
@@ -60,7 +59,7 @@ export async function insertLikes(
     const isLiked = await likeRepository.createIsLiked(likedProductUserId, likedProductId);
 
     //insert likeIsLiked
-    await likeRepository.createLikeIsLiked(likes.id, isLiked.id);
+    await likeRepository.createLikeIsLiked(likes.id, isLiked.id, isMatch);
 
     return;
 

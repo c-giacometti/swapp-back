@@ -22,3 +22,36 @@ export async function checkIfItsAMatch(likesId: number, isLikedId: number){
     return result;
     
 }
+
+export async function findUserMatchs(id: number){
+
+    const result = await connection.likesIsLiked.findMany({
+        select: {
+            LikesId: {
+                select: {
+                    LikingProductId: {
+                        select: {
+                            userId: true,
+                            productName: true,
+                            imgUrl: true,
+                        }
+                    }
+                }
+            },
+            IsLikedId: {
+                select: {
+                    LikedProductId: {
+                        select: {
+                            productName: true,
+                            imgUrl: true
+                        }
+                    }
+                }
+            }
+        },
+        where: { isMatch: true }
+    });
+
+    return result;
+
+}

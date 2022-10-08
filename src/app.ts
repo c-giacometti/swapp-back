@@ -6,6 +6,7 @@ import "express-async-errors";
 import authRouter from "./routes/authRouter";
 import productRouter from "./routes/productRouter";
 import likeRouter from "./routes/likeRouter";
+import matchRouter from "./routes/matchRouter";
 import errorHandler from "./middlewares/errorHandlerMiddleware";
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(authRouter);
 app.use(productRouter);
 app.use(likeRouter);
+app.use(matchRouter);
 app.use(errorHandler);
 
 export default app;

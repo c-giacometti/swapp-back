@@ -31,12 +31,13 @@ export async function createIsLiked(likedUserId: number, likedProductId: number)
 
 }
 
-export async function createLikeIsLiked(likesId: number, isLikedId: number){
+export async function createLikeIsLiked(likesId: number, isLikedId: number, isMatch: boolean){
 
     await connection.likesIsLiked.create({
         data: {
             likesId,
-            isLikedId
+            isLikedId,
+            isMatch
         }
     });
 
